@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,10 +16,19 @@ export default function LoginPage() {
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const username = formData.get('username') as string;
-    // Simulate a successful login
-    localStorage.setItem('user', JSON.stringify({ username }));
-    router.push('/');
+    const loginData = {
+      username: formData.get('username') as string,
+      password: formData.get('password') as string,
+    };
+
+    axios.post('/api/auth/public/signin', loginData)
+      .then(response => {
+        localStorage.setItem('token', response.data.token);
+        router.push('/');
+      })
+      .catch(error => {
+        console.error('Login failed:', error);
+      });
   };
 
   return (

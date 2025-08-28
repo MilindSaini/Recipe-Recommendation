@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
+
 export const metadata: Metadata = {
   title: 'Dishcovery',
   description: 'Discover your next meal with AI-powered recipes.',

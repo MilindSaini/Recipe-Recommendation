@@ -13,9 +13,30 @@ export default function SignupPage() {
   const router = useRouter();
   
   const handleSignup = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const username = formData.get('username') as string;
+ event.preventDefault();
+ const formData = new FormData(event.currentTarget);
+ const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+
+ fetch('/api/auth/public/signin', {
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json',
+ },
+ body: JSON.stringify({ username, password }),
+ })
+ .then((response) => response.json())
+ .then((data) => {
+ if (data.jwt) {
+        localStorage.setItem('token', data.jwt);
+ router.push('/');
+ } else {
+ console.error('Login failed:', data.message);
+ }
+ })
+ .catch((error) => {
+ console.error('Error during login:', error);
+ });
     // Simulate a successful signup
     localStorage.setItem('user', JSON.stringify({ username }));
     router.push('/');
