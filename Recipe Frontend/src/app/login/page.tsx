@@ -50,10 +50,6 @@ export default function LoginPage() {
                 <Input id="username" name="username" type="text" placeholder="yourusername" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="m@example.com" required />
-              </div>
-              <div className="space-y-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link href="#" className="ml-auto inline-block text-sm underline text-primary/80">
