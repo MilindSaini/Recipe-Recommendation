@@ -6,7 +6,7 @@ import { suggestSubstitutions, SuggestSubstitutionsInput, SuggestSubstitutionsOu
 import { z } from 'zod';
 
 const recipeSchema = z.object({
-  ingredients: z.string().min(10, { message: 'Please enter at least 10 characters for ingredients.' }),
+  ingredients: z.string().min(5, { message: 'Please enter at least 10 characters for ingredients.' }),
   dietaryRestrictions: z.string().optional(),
 });
 
