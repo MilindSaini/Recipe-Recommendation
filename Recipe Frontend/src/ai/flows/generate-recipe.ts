@@ -75,12 +75,21 @@ const generateRecipeFlow = ai.defineFlow(
     const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
     const EDAMAM_APP_KEY = process.env.EDAMAM_APP_KEY;
     if (EDAMAM_APP_ID && EDAMAM_APP_KEY) {
-      const response = await fetch(
-        `https://api.edamam.com/api/recipes/v2?type=public&q=${output.recipeName}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
-      );
-      const data = await response.json();
-      if (data.hits && data.hits.length > 0) {
-        output.imageUrl = data.hits[0].recipe.image;
+      const url = `https://api.edamam.com/api/recipes/v2?type=public&q=${output.recipeName}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`;
+      console.log('Edamam API URL:', url);
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Edamam-Account-User': 'user1234', // Required by Edamam API
+          }
+        });
+        const data = await response.json();
+
+        if (data.hits && data.hits.length > 0) {
+          output.imageUrl = data.hits[0].recipe.image;
+        }
+      } catch (error) {
+        console.error('Error fetching from Edamam API:', error);
       }
     }
     return output;
