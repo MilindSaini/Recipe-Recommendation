@@ -72,14 +72,15 @@ const generateRecipeFlow = ai.defineFlow(
       throw new Error('Failed to generate recipe');
     }
 
-    const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
-    if (SPOONACULAR_API_KEY) {
+    const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
+    const EDAMAM_APP_KEY = process.env.EDAMAM_APP_KEY;
+    if (EDAMAM_APP_ID && EDAMAM_APP_KEY) {
       const response = await fetch(
-        `https://api.spoonacular.com/recipes/complexSearch?query=${output.recipeName}&apiKey=${SPOONACULAR_API_KEY}`
+        `https://api.edamam.com/api/recipes/v2?type=public&q=${output.recipeName}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
       );
       const data = await response.json();
-      if (data.results && data.results.length > 0) {
-        output.imageUrl = data.results[0].image;
+      if (data.hits && data.hits.length > 0) {
+        output.imageUrl = data.hits[0].recipe.image;
       }
     }
     return output;
