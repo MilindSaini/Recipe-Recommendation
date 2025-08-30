@@ -34,7 +34,8 @@ const GenerateRecipeOutputSchema = z.object({
   substitutedIngredients: z
     .string()
     .optional()
-    .describe("list of substituted ingredients, to accomodate dietary restrictions and match available ingredients")
+    .describe("list of substituted ingredients, to accomodate dietary restrictions and match available ingredients"),
+  imageUrl: z.string().optional().describe("A URL for an image of the recipe."),
 });
 export type GenerateRecipeOutput = z.infer<typeof GenerateRecipeOutputSchema>;
 
@@ -45,7 +46,8 @@ export async function generateRecipe(input: GenerateRecipeInput): Promise<Genera
 const prompt = ai.definePrompt({
   name: 'generateRecipePrompt',
   input: {schema: GenerateRecipeInputSchema},
-  output: {schema: GenerateRecipeOutputSchema},
+  // Switching to json mode is recommended for consistent object output.
+  output: {schema: GenerateRecipeOutputSchema, format: 'json'},
   prompt: `You are a professional chef who specializes in creating recipes based on available ingredients and dietary restrictions.
 
   Please generate a recipe based on the following ingredients:
@@ -66,6 +68,20 @@ const generateRecipeFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('Failed to generate recipe');
+    }
+
+    const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
+    if (SPOONACULAR_API_KEY) {
+      const response = await fetch(
+        `https://api.spoonacular.com/recipes/complexSearch?query=${output.recipeName}&apiKey=${SPOONACULAR_API_KEY}`
+      );
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        output.imageUrl = data.results[0].image;
+      }
+    }
+    return output;
   }
 );

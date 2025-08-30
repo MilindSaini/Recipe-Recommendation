@@ -6,6 +6,7 @@ interface Recipe {
   instructions: string;
   nutritionalInfo?: string | null;
   substitutedIngredients?: string | null;
+  imageUrl?: string | null;
 }
 
 interface RecipeDisplayProps {
@@ -26,7 +27,7 @@ export function RecipeDisplay({ recipe }: RecipeDisplayProps) {
       <CardContent className="space-y-6">
         <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
           <Image
-            src="https://picsum.photos/800/600"
+            src={recipe.imageUrl || "https://picsum.photos/800/600"}
             alt={recipe.recipeName}
             fill
             className="object-cover"
