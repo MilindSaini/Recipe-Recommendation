@@ -13,33 +13,35 @@ export default function SignupPage() {
   const router = useRouter();
   
   const handleSignup = (event: React.FormEvent<HTMLFormElement>) => {
- event.preventDefault();
- const formData = new FormData(event.currentTarget);
- const username = formData.get('username') as string;
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get('username') as string;
     const password = formData.get('password') as string;
-
- fetch('/api/auth/public/signin', {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- },
- body: JSON.stringify({ username, password }),
- })
- .then((response) => response.json())
- .then((data) => {
- if (data.jwt) {
-        localStorage.setItem('token', data.jwt);
- router.push('/');
- } else {
- console.error('Login failed:', data.message);
- }
- })
- .catch((error) => {
- console.error('Error during login:', error);
- });
-    // Simulate a successful signup
-    localStorage.setItem('user', JSON.stringify({ username }));
-    router.push('/');
+    const email = formData.get('email') as string;
+  
+    fetch('http://localhost:8080/api/auth/public/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password, email }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === 'User registered successfully!') {
+          // Optionally, redirect to login or auto-login
+          // router.push('/login');
+          alert('Signup successful! Please log in.');
+          router.push('/login');
+        } else {
+          console.error('Signup failed:', data.message);
+          alert(data.message || 'Signup failed');
+        }
+      })
+      .catch((error) => {
+        console.error('Error during signup:', error);
+        alert('Error during signup');
+      });
   };
 
   return (

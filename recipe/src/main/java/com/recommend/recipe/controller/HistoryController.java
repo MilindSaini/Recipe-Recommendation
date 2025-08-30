@@ -7,10 +7,13 @@ import com.recommend.recipe.utils.AuthUtil; // Assuming you have this utility cl
 import com.recommend.recipe.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,4 +44,16 @@ public class HistoryController {
         List<Recipe> recipes = recipeService.getRecipesByUserId(userId);
         return ResponseEntity.ok(recipes);
     }
+    @PostMapping("/history")
+@PreAuthorize("isAuthenticated()")
+public ResponseEntity<?> saveRecipe(@RequestBody Recipe recipe) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    User user = userService.findByUsername(username);
+    if (user == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+    }
+    recipe.setUserId(user.getId()); // Make sure Recipe has a userId field
+    recipeService.saveRecipe(recipe);
+    return ResponseEntity.ok("Recipe saved successfully");
+}
 }

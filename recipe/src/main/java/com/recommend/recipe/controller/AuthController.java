@@ -37,7 +37,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/public/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -55,8 +55,9 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/public/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        // System.out.println("registerUser called with: " + signUpRequest);
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new MessageResponse("Error: Username is already taken!"));

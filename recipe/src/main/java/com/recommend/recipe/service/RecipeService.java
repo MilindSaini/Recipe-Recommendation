@@ -32,4 +32,8 @@ public class RecipeService {
     public List<Recipe> getRecipesByUserId(String userId) {
         return recipeRepository.findByUserId(userId);
     }
+
+    public void saveRecipe(Recipe recipe) {
+    recipeRepository.save(recipe);
+    }
 }

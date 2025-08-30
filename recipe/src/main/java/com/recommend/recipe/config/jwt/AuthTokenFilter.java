@@ -56,7 +56,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
+    @Override
+protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    // Skip JWT filter for public endpoints
+    System.out.println("shouldNotFilter called for: " + path);
+    return path.startsWith("/api/auth/public/");
+}
     private String parseJwt(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromHeader(request);
         logger.debug("AuthTokenFilter.java: {}", jwt);

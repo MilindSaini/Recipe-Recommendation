@@ -20,14 +20,31 @@ export default function LoginPage() {
       username: formData.get('username') as string,
       password: formData.get('password') as string,
     };
-
-    axios.post('/api/auth/public/signin', loginData)
-      .then(response => {
-        localStorage.setItem('token', response.data.token);
-        router.push('/');
+  
+    // Use the backend URL directly
+    // Optionally, use an environment variable for the base URL
+    fetch('http://localhost:8080/api/auth/public/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loginData),
+    })
+      .then(async response => {
+        const data = await response.json();
+        if (response.ok && data.jwtToken) {
+          // localStorage.setItem('token', data.jwtToken);
+          // localStorage.setItem('user', JSON.stringify({ username: data.username }));
+          localStorage.setItem('user', JSON.stringify({ username: data.username, token: data.jwtToken }));
+          router.push('/');
+        } else {
+          console.error('Login failed:', data.message || data.error || 'Unknown error');
+          alert(data.message || data.error || 'Login failed');
+        }
       })
       .catch(error => {
         console.error('Login failed:', error);
+        alert('Login failed');
       });
   };
 

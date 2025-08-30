@@ -74,8 +74,52 @@ export function RecipeGenerator() {
     
     formAction(formData);
   };
-
-
+  async function saveRecipeToBackend(recipe: Recipe) {
+    const user = localStorage.getItem('user');
+    if (!user) return;
+    const { token } = JSON.parse(user);
+    try {
+      const response = await fetch('http://localhost:8080/api/history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(recipe),
+      });
+      if (!response.ok) {
+        console.error('Failed to save recipe to backend');
+      }
+    } catch (error) {
+      console.error('Error saving recipe to backend:', error);
+    }
+  }
+  useEffect(() => {
+    if (state.error) {
+      toast({
+        title: "Error",
+        description: state.error,
+        variant: "destructive",
+      });
+    }
+    if (state.recipe) {
+      toast({
+        title: "Recipe Generated!",
+        description: `We've cooked up a "${state.recipe.recipeName}" for you.`,
+      });
+  
+      // Save to backend
+      saveRecipeToBackend(state.recipe);
+  
+      // Optionally, save to localStorage as well
+      const loggedInUser = localStorage.getItem('user');
+      if (loggedInUser) {
+        const storedRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+        const newRecipes = [state.recipe, ...storedRecipes];
+        localStorage.setItem('recipes', JSON.stringify(newRecipes));
+      }
+    }
+  }, [state, toast]);
   return (
     <div className="w-full max-w-2xl mx-auto">
       <Card className="shadow-lg border-primary/20">

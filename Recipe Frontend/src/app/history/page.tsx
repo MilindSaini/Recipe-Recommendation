@@ -30,7 +30,7 @@ export default function HistoryPage() {
         setIsLoggedIn(true);
         try {
           const token = JSON.parse(loggedInUser).token; // Assuming the user object in localStorage has a 'token' field
-          const response = await fetch('/api/history', {
+          const response = await fetch('http://localhost:8080/api/history', {
             headers: {
               'Authorization': `Bearer ${token}`,
             },
