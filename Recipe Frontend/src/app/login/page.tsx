@@ -9,9 +9,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ChefHat } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { toast } = useToast();
   
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,13 +40,19 @@ export default function LoginPage() {
           localStorage.setItem('user', JSON.stringify({ username: data.username, token: data.jwtToken }));
           router.push('/');
         } else {
-          console.error('Login failed:', data.message || data.error || 'Unknown error');
-          alert(data.message || data.error || 'Login failed');
+          toast({
+            title: 'Login failed',
+            description: data.message || data.error || 'Unknown error',
+            variant: 'destructive',
+          });
         }
       })
       .catch(error => {
-        console.error('Login failed:', error);
-        alert('Login failed');
+        toast({
+          title: 'Login failed',
+          description: 'An unexpected error occurred.',
+          variant: 'destructive',
+        });
       });
   };
 

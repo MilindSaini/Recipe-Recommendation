@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useEffect } from "react";
@@ -44,6 +45,11 @@ export function SubstitutionSuggester() {
         title: "Error",
         description: state.error,
         variant: "destructive",
+      });
+    } else if (state.substitutions) {
+      toast({
+        title: "Substitutions Found!",
+        description: "We've found some ingredient substitutions for you.",
       });
     }
   }, [state, toast]);

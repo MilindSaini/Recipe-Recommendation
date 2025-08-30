@@ -8,9 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ChefHat } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
   const router = useRouter();
+  const { toast } = useToast();
   
   const handleSignup = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,18 +31,25 @@ export default function SignupPage() {
       .then((response) => response.json())
       .then((data) => {
         if (data.message === 'User registered successfully!') {
-          // Optionally, redirect to login or auto-login
-          // router.push('/login');
-          alert('Signup successful! Please log in.');
+          toast({
+            title: 'Signup successful!',
+            description: 'Please log in.',
+          });
           router.push('/login');
         } else {
-          console.error('Signup failed:', data.message);
-          alert(data.message || 'Signup failed');
+          toast({
+            title: 'Signup failed',
+            description: data.message || 'An unknown error occurred.',
+            variant: 'destructive',
+          });
         }
       })
       .catch((error) => {
-        console.error('Error during signup:', error);
-        alert('Error during signup');
+        toast({
+          title: 'Error during signup',
+          description: 'An unexpected error occurred.',
+          variant: 'destructive',
+        });
       });
   };
 

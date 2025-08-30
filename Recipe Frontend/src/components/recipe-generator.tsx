@@ -39,41 +39,6 @@ export function RecipeGenerator() {
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (state.error) {
-      toast({
-        title: "Error",
-        description: state.error,
-        variant: "destructive",
-      });
-    }
-    if (state.recipe) {
-      toast({
-        title: "Recipe Generated!",
-        description: `We've cooked up a "${state.recipe.recipeName}" for you.`,
-      });
-      
-      const loggedInUser = localStorage.getItem('user');
-      if (loggedInUser) {
-        const storedRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
-        const newRecipes = [state.recipe, ...storedRecipes];
-        localStorage.setItem('recipes', JSON.stringify(newRecipes));
-      }
-    }
-  }, [state, toast]);
-  
-  const handleFormAction = (formData: FormData) => {
-    const ingredients = formData.get('ingredients') as string;
-    const dietaryRestrictions = formData.get('dietaryRestrictions') as string;
-    
-    // Augment the state passed to the action with the raw inputs
-    const augmentedAction = (prevState: any) => generateRecipeAction(
-      { ...prevState, ingredients, dietaryRestrictions },
-      formData
-    );
-    
-    formAction(formData);
-  };
   async function saveRecipeToBackend(recipe: Recipe) {
     const user = localStorage.getItem('user');
     if (!user) return;
@@ -87,17 +52,32 @@ export function RecipeGenerator() {
         },
         body: JSON.stringify(recipe),
       });
-      if (!response.ok) {
-        console.error('Failed to save recipe to backend');
+      if (response.ok) {
+        toast({
+          title: "Recipe Saved!",
+          description: `"${recipe.recipeName}" has been saved to your history.`,
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Failed to Save Recipe",
+          description: errorData.message || "An unknown error occurred.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      console.error('Error saving recipe to backend:', error);
+      toast({
+        title: "Error Saving Recipe",
+        description: "An unexpected error occurred while saving the recipe.",
+        variant: "destructive",
+      });
     }
   }
+  
   useEffect(() => {
     if (state.error) {
       toast({
-        title: "Error",
+        title: "Error Generating Recipe",
         description: state.error,
         variant: "destructive",
       });
@@ -107,19 +87,10 @@ export function RecipeGenerator() {
         title: "Recipe Generated!",
         description: `We've cooked up a "${state.recipe.recipeName}" for you.`,
       });
-  
-      // Save to backend
       saveRecipeToBackend(state.recipe);
-  
-      // Optionally, save to localStorage as well
-      const loggedInUser = localStorage.getItem('user');
-      if (loggedInUser) {
-        const storedRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
-        const newRecipes = [state.recipe, ...storedRecipes];
-        localStorage.setItem('recipes', JSON.stringify(newRecipes));
-      }
     }
   }, [state, toast]);
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <Card className="shadow-lg border-primary/20">
