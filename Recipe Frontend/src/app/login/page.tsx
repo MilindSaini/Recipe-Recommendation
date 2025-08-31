@@ -60,7 +60,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
        <Link href="/" className="absolute top-4 left-4 md:top-8 md:left-8 flex items-center gap-2 group">
           <ChefHat className="w-8 h-8 text-primary group-hover:animate-pulse" />
-          <h1 className="text-2xl font-headline font-bold text-primary">Generate Recipe</h1>
+          <h1 className="text-2xl font-headline font-bold text-primary">Recipe Generate</h1>
         </Link>
       <div className="w-full max-w-md">
         <Card className="shadow-2xl shadow-primary/10">
