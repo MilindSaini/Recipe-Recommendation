@@ -1,6 +1,48 @@
+# Recipe Recommendation Application
 
-This project is a recipe recommendation application designed to provide users with an engaging and visually appealing cooking experience.
+This project is a web application for recommending recipes. It consists of a Java-based backend and a Next.js frontend.
 
-The frontend is a mobile-responsive web interface built with ReactJS and styled with Tailwind CSS. It adheres to a specific style guide, using a crimson primary color and a light rose background to create a bold and appetizing feel. The typography uses 'Belleza' for headlines and 'Alegreya' for body text to ensure readability and a touch of elegance.
+## Getting Started
 
-The backend is a Java-based application that manages the core recipe data. This includes details like recipe names, instructions, nutritional information, ingredients, and dietary restrictions, as defined in the Recipe.java model. The backend exposes an API that the frontend consumes to fetch and display recipe information to the user. This separation of concerns creates a robust and scalable architecture.
+### Prerequisites
+
+*   Java 17 or later
+*   Maven
+*   Node.js and npm
+
+### Backend
+
+To run the backend server:
+
+1.  Navigate to the `recipe` directory:
+    ```bash
+    cd recipe
+    ```
+2.  Run the application using the Maven wrapper:
+    ```bash
+    ./mvnw spring-boot:run
+    ```
+The backend will be running on `http://localhost:8080`.
+
+### Frontend
+
+To run the frontend application:
+
+1.  Navigate to the `Recipe Frontend` directory:
+    ```bash
+    cd "Recipe Frontend"
+    ```
+2.  Install the dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+The frontend will be running on `http://localhost:3000`.
+
+## Project Structure
+
+*   `recipe/`: The Java-based backend application.
+*   `Recipe Frontend/`: The Next.js frontend application.
