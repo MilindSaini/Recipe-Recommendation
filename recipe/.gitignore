@@ -26,7 +26,7 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-recipe/application.properties
+src/main/resources/application.properties
 !**/src/main/**/build/
 !**/src/test/**/build/
 
