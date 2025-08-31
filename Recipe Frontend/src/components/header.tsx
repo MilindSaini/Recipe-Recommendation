@@ -29,7 +29,7 @@ export function Header() {
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 group">
           <ChefHat className="w-8 h-8 text-primary group-hover:animate-pulse" />
-          <h1 className="text-2xl font-headline font-bold text-primary">Dishcovery</h1>
+          <h1 className="text-2xl font-headline font-bold text-primary">Recipe Generate</h1>
         </Link>
         <nav className="flex items-center gap-2">
           {user ? (

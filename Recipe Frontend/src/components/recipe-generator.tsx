@@ -107,9 +107,10 @@ export function RecipeGenerator() {
               <Textarea
                 id="ingredients"
                 name="ingredients"
-                placeholder="e.g., chicken breast, broccoli, garlic, olive oil"
+                placeholder="e.g., Panner ,bread, eggs, milk, cinnamon"
                 required
                 rows={4}
+                minLength={5}
               />
             </div>
             <div className="space-y-2">

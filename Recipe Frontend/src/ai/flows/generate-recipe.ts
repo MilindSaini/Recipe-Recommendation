@@ -14,6 +14,7 @@ import {z} from 'genkit';
 const GenerateRecipeInputSchema = z.object({
   ingredients: z
     .string()
+    .min(5, 'Enter at least 5 characters') 
     .describe('A comma-separated list of ingredients available to the user.'),
   dietaryRestrictions: z
     .string()
@@ -84,12 +85,13 @@ const generateRecipeFlow = ai.defineFlow(
           }
         });
         const data = await response.json();
-
+        console.log('Edamam API Response:', data);
         if (data.hits && data.hits.length > 0) {
           output.imageUrl = data.hits[0].recipe.image;
         }
       } catch (error) {
         console.error('Error fetching from Edamam API:', error);
+
       }
     }
     return output;
